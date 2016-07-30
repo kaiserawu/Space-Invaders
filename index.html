@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <style type="text/css">
+            #game {
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="game"></div>
+        <script type="text/javascript" src="js/crafty.js"></script>
+        <script>
+            Crafty.init(500,350, document.getElementById('game'));
+
+            // left wall
+            Crafty.e('2D, DOM, Solid, Color')
+                .attr({x: 0, y: 0, w: 5, h: 350})
+                .color('#F00')
+
+            // right wall
+            Crafty.e('2D, DOM, Solid, Color')
+                .attr({x: 495, y: 0, w: 5, h: 350})
+                .color('#F00')
+
+            // This is the player-controlled character
+            Crafty.c('PlayerCharacter', {
+                init: function() {
+                    this.requires('2D, DOM, Color, Collision, Twoway')
+                        .attr({x: 200, y: 0, w: 100, h: 100})
+                        .color('#F00')
+                        .twoway(200)
+                        .stopOnSolids();
+                },
+
+                // Registers a stop-movement function to be called when
+                //    this entity hits an entity with the "Solid" component
+                stopOnSolids: function() {
+                    this.onHit('Solid', this.stopMovement);
+                    return this;
+                },
+
+                // Stops the movement
+                stopMovement: function() {
+                    //debugger;
+                    this.resetMotion();
+                    this.resetMotion();
+                    //console.log("stopMmovement");
+                    //console.log(this._movement);
+                    //console.log(this._speed);
+                    //this._speed = 0;
+                    //if (this._movement) {
+                    //    this.x -= this._movement.x;
+                    //    this.y -= this._movement.y;
+                    //}
+                }
+            });
+
+            Crafty.e('PlayerCharacter');
+        </script>
+    </body>
+</html>
