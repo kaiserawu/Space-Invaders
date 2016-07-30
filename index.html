@@ -35,6 +35,35 @@
                 }
             });
 
+
+
+            Crafty.c('Enemy', {
+                init: function() {
+                    this.requires('2D, DOM, Color, Collision, Motion')
+                        .attr({w: 20, h: 20})
+                        .color('#000000')
+                        .enemyWallHit()
+                    this.velocity().x = -150
+                },
+                enemyWallHit: function() {
+                    this.checkHits('Solid')
+                        .bind('HitOn', function() {
+                            var xVelEnemy = this.velocity().x
+                            this.velocity().x = 0;
+                            this.velocity().y = 50;
+                            //debugger
+                            var enemy = this;
+                            setTimeout(function() {
+                                enemy.velocity().y = 0;
+                                enemy.velocity().x = -xVelEnemy
+                                //debugger
+                            }, 1000)
+
+                        })
+                }
+            })
+
+
             // This is the player-controlled character
             Crafty.c('PlayerCharacter', {
                 init: function() {
@@ -72,6 +101,7 @@
                 }
             });
             Crafty.e('PlayerCharacter').attr({x: (viewWidth - charWidth) / 2, y: viewHeight - 55 });
+            Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30});
         </script>
     </body>
 </html>
