@@ -10,7 +10,7 @@
         <div id="game"></div>
         <script type="text/javascript" src="js/crafty.js"></script>
         <script>
-            Crafty.init(500,350, document.getElementById('game'));
+            Crafty.init(500, 350, document.getElementById('game'));
 
             // left wall
             Crafty.e('2D, DOM, Solid, Color')
@@ -40,18 +40,8 @@
                 },
 
                 // Stops the movement
-                stopMovement: function() {
-                    //debugger;
-                    this.resetMotion();
-                    this.resetMotion();
-                    //console.log("stopMmovement");
-                    //console.log(this._movement);
-                    //console.log(this._speed);
-                    //this._speed = 0;
-                    //if (this._movement) {
-                    //    this.x -= this._movement.x;
-                    //    this.y -= this._movement.y;
-                    //}
+                stopMovement: function(hit_vals) {
+                    this.x -= this.dx;
                 }
             });
 
