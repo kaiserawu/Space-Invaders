@@ -10,26 +10,40 @@
         <div id="game"></div>
         <script type="text/javascript" src="js/crafty.js"></script>
         <script>
-            Crafty.init(500, 350, document.getElementById('game'));
+            var viewWidth = 500,
+                viewHeight = 350,
+                charWidth = 50;
+
+            Crafty.init(viewWidth, viewHeight, document.getElementById('game'));
 
             // left wall
             Crafty.e('2D, DOM, Solid, Color')
-                .attr({x: 0, y: 0, w: 5, h: 350})
+                .attr({x: 0, y: 0, w: 1, h: viewHeight})
                 .color('#F00')
 
             // right wall
             Crafty.e('2D, DOM, Solid, Color')
-                .attr({x: 495, y: 0, w: 5, h: 350})
+                .attr({x: 499, y: 0, w: 1, h: viewHeight})
                 .color('#F00')
+
+            Crafty.c('Bullet', {
+                init: function() {
+                    this.requires('2D, DOM, Color, Collision, Motion')
+                        .attr({w: 10, h: 10})
+                        .color('#FF0000')
+                    this.velocity().y = -150;
+                }
+            });
 
             // This is the player-controlled character
             Crafty.c('PlayerCharacter', {
                 init: function() {
                     this.requires('2D, DOM, Color, Collision, Twoway')
-                        .attr({x: 200, y: 0, w: 100, h: 100})
+                        .attr({w: charWidth, h: 50})
                         .color('#F00')
-                        .twoway(200)
-                        .stopOnSolids();
+                        .twoway(300)
+                        .stopOnSolids()
+                        .shootOnSpace()
                 },
 
                 // Registers a stop-movement function to be called when
@@ -42,10 +56,22 @@
                 // Stops the movement
                 stopMovement: function(hit_vals) {
                     this.x -= this.dx;
+                },
+
+                // shoot bullets
+                shootOnSpace: function() {
+                    var ship = this;
+                    this.bind('KeyDown', function(e) {
+                        if (e.key == Crafty.keys.SPACE) {
+                            Crafty.e('Bullet').attr({
+                                x: ship.x + charWidth / 2 - 5,
+                                y: ship.y
+                            })
+                        }
+                    });
                 }
             });
-
-            Crafty.e('PlayerCharacter');
+            Crafty.e('PlayerCharacter').attr({x: (viewWidth - charWidth) / 2, y: viewHeight - 55 });
         </script>
     </body>
 </html>
