@@ -28,7 +28,7 @@
 
             Crafty.c('Bullet', {
                 init: function() {
-                    this.requires('2D, DOM, Color, Collision, Motion')
+                    this.requires('2D, DOM, Color, Bullet, Collision, Motion')
                         .attr({w: 10, h: 10})
                         .color('#FF0000')
                     this.velocity().y = -150;
@@ -43,25 +43,33 @@
                         .attr({w: 20, h: 20})
                         .color('#000000')
                         .enemyWallHit()
+                        .bulletHit()
                     this.velocity().x = -150
                 },
+                bulletHit: function() {
+                    this.onHit('Bullet', this.destroy);
+                    return this;
+                },
+
                 enemyWallHit: function() {
                     this.checkHits('Solid')
                         .bind('HitOn', function() {
                             var xVelEnemy = this.velocity().x
                             this.velocity().x = 0;
                             this.velocity().y = 50;
-                            //debugger
                             var enemy = this;
                             setTimeout(function() {
                                 enemy.velocity().y = 0;
                                 enemy.velocity().x = -xVelEnemy
-                                //debugger
                             }, 1000)
 
                         })
+                    return this
                 }
             })
+                
+
+
 
 
             // This is the player-controlled character
