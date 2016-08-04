@@ -29,17 +29,18 @@
             Crafty.c('Bullet', {
                 init: function() {
                     this.requires('2D, DOM, Color, Bullet, Collision, Motion')
-                        .attr({w: 10, h: 10})
+                        .attr({w: 5, h: 5})
                         .color('#FF0000')
-                    this.velocity().y = -150;
-                }
+                    this.velocity().y = -300;
+                },
+
             });
 
 
 
             Crafty.c('Enemy', {
                 init: function() {
-                    this.requires('2D, DOM, Color, Collision, Motion')
+                    this.requires('2D, DOM, Color, Enemy, Collision, Motion')
                         .attr({w: 20, h: 20})
                         .color('#000000')
                         .enemyWallHit()
@@ -47,7 +48,16 @@
                     this.velocity().x = -150
                 },
                 bulletHit: function() {
-                    this.onHit('Bullet', this.destroy);
+                    this.onHit('Bullet', function(hits) {
+                        this.addComponent("Dead")
+                        return this
+                        this.destroy();
+                        debugger
+                        for (var i = 0, l = hits.length; i < l; i++) {
+                            hits[i].obj.destroy();
+                        }
+                    });
+
                     return this;
                 },
 
@@ -61,7 +71,7 @@
                             setTimeout(function() {
                                 enemy.velocity().y = 0;
                                 enemy.velocity().x = -xVelEnemy
-                            }, 1000)
+                            }, 600)
 
                         })
                     return this
@@ -101,15 +111,33 @@
                     this.bind('KeyDown', function(e) {
                         if (e.key == Crafty.keys.SPACE) {
                             Crafty.e('Bullet').attr({
-                                x: ship.x + charWidth / 2 - 5,
+                                x: ship.x + charWidth / 2 - 2,
                                 y: ship.y
                             })
                         }
                     });
                 }
             });
+            
+            var enemies = [];
             Crafty.e('PlayerCharacter').attr({x: (viewWidth - charWidth) / 2, y: viewHeight - 55 });
-            Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30});
+            enemies.push(Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30}));
+
+            var gameLoop = setInterval(function() {
+                for (var i = 0; i < enemies.length; i++) {
+                    var e = enemies[i];
+                    if (e.y > viewHeight - 80) {
+                        Crafty.stop(true);
+                        alert("YOU LOSE")
+                        clearInterval(gameLoop);
+                    }
+                }
+                if (Crafty("Enemy").has("Dead")) {
+                    Crafty.stop(true);
+                    alert("YOU WIN")
+                    clearInterval(gameLoop);
+                }
+            }, 50);
         </script>
     </body>
 </html>
