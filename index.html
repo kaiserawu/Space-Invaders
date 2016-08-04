@@ -118,23 +118,35 @@
             
             var enemies = [];
             Crafty.e('PlayerCharacter').attr({x: (viewWidth - charWidth) / 2, y: viewHeight - 55 });
+            enemies.push(Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30}))
+
+            var spawn_count = 1;
+            var enemy_spawn = setInterval(function() {
+                enemies.push(Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30}));
+                spawn_count ++
+                if (spawn_count == 40) {
+                    clearInterval(enemy_spawn);
+                }
+            }, 500)
+
 
             var gameLoop = setInterval(function() {
+                if (!Crafty("Enemy").length && spawn_count == 40) {
+                    Crafty.stop(true);
+                    alert("YOU WIN")
+                    clearInterval(gameLoop);
+                };
                 for (var i = 0; i < enemies.length; i++) {
                     var e = enemies[i];
                     if (e.y > viewHeight - 80) {
                         Crafty.stop(true);
                         alert("YOU LOSE")
+                        var lose = true
                         clearInterval(gameLoop);
                     }
-                }
-                console.log(enemies[0])
-                if (!Crafty("Enemy").length) {
-                    Crafty.stop(true);
-                    alert("YOU WIN")
-                    clearInterval(gameLoop);
-                }
+                };
             }, 50);
+
         </script>
     </body>
 </html>
