@@ -49,10 +49,7 @@
                 },
                 bulletHit: function() {
                     this.onHit('Bullet', function(hits) {
-                        this.addComponent("Dead")
-                        return this
                         this.destroy();
-                        debugger
                         for (var i = 0, l = hits.length; i < l; i++) {
                             hits[i].obj.destroy();
                         }
@@ -121,7 +118,6 @@
             
             var enemies = [];
             Crafty.e('PlayerCharacter').attr({x: (viewWidth - charWidth) / 2, y: viewHeight - 55 });
-            enemies.push(Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30}));
 
             var gameLoop = setInterval(function() {
                 for (var i = 0; i < enemies.length; i++) {
@@ -132,7 +128,8 @@
                         clearInterval(gameLoop);
                     }
                 }
-                if (Crafty("Enemy").has("Dead")) {
+                console.log(enemies[0])
+                if (!Crafty("Enemy").length) {
                     Crafty.stop(true);
                     alert("YOU WIN")
                     clearInterval(gameLoop);
