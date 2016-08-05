@@ -16,6 +16,7 @@
 
             Crafty.init(viewWidth, viewHeight, document.getElementById('game'));
 
+
             // left wall
             Crafty.e('2D, DOM, Solid, Color')
                 .attr({x: 0, y: 0, w: 1, h: viewHeight})
@@ -118,7 +119,6 @@
             
             var enemies = [];
             Crafty.e('PlayerCharacter').attr({x: (viewWidth - charWidth) / 2, y: viewHeight - 55 });
-            enemies.push(Crafty.e('Enemy').attr({x: (viewWidth - 20) / 2, y: 30}))
 
             var spawn_count = 1;
             var enemy_spawn = setInterval(function() {
@@ -130,23 +130,24 @@
             }, 500)
 
 
-            var gameLoop = setInterval(function() {
-                if (!Crafty("Enemy").length && spawn_count == 40) {
-                    Crafty.stop(true);
-                    alert("YOU WIN")
-                    clearInterval(gameLoop);
-                };
-                for (var i = 0; i < enemies.length; i++) {
-                    var e = enemies[i];
-                    if (e.y > viewHeight - 80) {
+            setTimeout(function() {
+                var gameLoop = setInterval(function() {
+                    if (!Crafty("Enemy").length && spawn_count == 40) {
                         Crafty.stop(true);
-                        alert("YOU LOSE")
-                        var lose = true
+                        alert("YOU WIN")
                         clearInterval(gameLoop);
-                    }
-                };
-            }, 50);
-
+                    };
+                    for (var i = 0; i < enemies.length; i++) {
+                        var e = enemies[i];
+                        if (e.y > viewHeight - 80) {
+                            Crafty.stop(true);
+                            alert("YOU LOSE")
+                            var lose = true
+                            clearInterval(gameLoop);
+                        }
+                    };
+                }, 50);
+                }, 2000)
         </script>
     </body>
 </html>
